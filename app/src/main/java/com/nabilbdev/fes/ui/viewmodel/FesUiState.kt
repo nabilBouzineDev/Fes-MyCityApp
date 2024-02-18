@@ -1,8 +1,8 @@
-package com.nabilbdev.fes.ui
+package com.nabilbdev.fes.ui.viewmodel
 
 import com.nabilbdev.fes.data.DataSourceProvider
-import com.nabilbdev.fes.model.CategoryOptions
-import com.nabilbdev.fes.model.Recommendation
+import com.nabilbdev.fes.data.model.CategoryOptions
+import com.nabilbdev.fes.data.model.Recommendation
 
 data class FesUiState(
     val recommendationLists: Map<CategoryOptions, List<Recommendation>> = emptyMap(),

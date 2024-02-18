@@ -1,8 +1,8 @@
 package com.nabilbdev.fes.data
 
 import com.nabilbdev.fes.R
-import com.nabilbdev.fes.model.CategoryOptions
-import com.nabilbdev.fes.model.Recommendation
+import com.nabilbdev.fes.data.model.CategoryOptions
+import com.nabilbdev.fes.data.model.Recommendation
 import com.nabilbdev.fes.ui.utils.FesPlacesReview
 
 /** Map of available CategoryItem to be displayed in Category Fragments*/
@@ -19,7 +19,7 @@ object DataSourceProvider {
 
     val allRecommendations = listOf(
         Recommendation(
-            name = "Al-Qarawiyyin Mosque-University",
+            name = "Al-Qarawiyyin University",
             description = "The University of al-Qarawiyyin is one of the oldest universities in the world. It was founded over a thousand years ago, in 859 AD, by a woman named Fatima al-Fihri. The university has a rich history and is known for its Islamic studies and Arabic language programs.",
             review = FesPlacesReview.FIVE,
             categoryOptions = CategoryOptions.LANDMARK,

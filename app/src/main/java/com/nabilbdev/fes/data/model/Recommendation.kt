@@ -1,4 +1,4 @@
-package com.nabilbdev.fes.model
+package com.nabilbdev.fes.data.model
 
 import androidx.annotation.DrawableRes
 import com.nabilbdev.fes.ui.utils.FesPlacesReview

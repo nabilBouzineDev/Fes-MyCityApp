@@ -1,9 +1,9 @@
-package com.nabilbdev.fes.ui
+package com.nabilbdev.fes.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.nabilbdev.fes.data.DataSourceProvider
-import com.nabilbdev.fes.model.CategoryOptions
-import com.nabilbdev.fes.model.Recommendation
+import com.nabilbdev.fes.data.model.CategoryOptions
+import com.nabilbdev.fes.data.model.Recommendation
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -30,10 +30,19 @@ class FesViewModel : ViewModel() {
             )
     }
 
-    fun updateRecommendationDetailsScreenStates(recommendation: Recommendation) {
+    fun updateSelectedRecommendation(recommendation: Recommendation) {
         _uiState.update {
             it.copy(
                 currentSelectedRecommendation = recommendation,
+                isShowingFeed = false
+            )
+        }
+    }
+
+    fun updateSelectedCategoryOption(categoryOptions: CategoryOptions) {
+        _uiState.update {
+            it.copy(
+                currentSelectedCategory = categoryOptions,
                 isShowingFeed = false
             )
         }
