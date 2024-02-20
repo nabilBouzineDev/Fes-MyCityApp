@@ -1,14 +1,17 @@
 package com.nabilbdev.fes.ui.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -18,6 +21,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
@@ -30,6 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.nabilbdev.fes.R
 import com.nabilbdev.fes.data.DataSourceProvider
 import com.nabilbdev.fes.data.model.Recommendation
+import com.nabilbdev.fes.ui.theme.FesTheme
 
 @Composable
 fun RecommendationScreen(
@@ -37,10 +43,11 @@ fun RecommendationScreen(
     onBackButtonClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+
     Card(
         shape = RectangleShape,
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primary
+            containerColor = MaterialTheme.colorScheme.tertiary
         ),
         modifier = modifier.fillMaxSize()
     ) {
@@ -50,7 +57,7 @@ fun RecommendationScreen(
                 contentDescription = null,
                 contentScale = ContentScale.FillBounds,
                 colorFilter = ColorFilter.tint(
-                    color = MaterialTheme.colorScheme.primary.copy(0.8f),
+                    color = MaterialTheme.colorScheme.tertiary.copy(0.8f),
                     blendMode = BlendMode.Darken
                 ),
                 modifier = modifier
@@ -59,7 +66,8 @@ fun RecommendationScreen(
             )
             BackIconButtonAndPlaceName(
                 recommendation = recommendation,
-                onBackButtonClicked = onBackButtonClicked
+                onBackButtonClicked = onBackButtonClicked,
+                modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small))
             )
         }
         ReviewAndDescription(
@@ -74,28 +82,42 @@ fun BackIconButtonAndPlaceName(
     onBackButtonClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier.padding(dimensionResource(id = R.dimen.padding_small))) {
-        IconButton(
-            onClick = onBackButtonClicked,
-        ) {
-            Icon(
-                imageVector = Icons.Filled.ArrowDropDown,
-                contentDescription = null,
-                modifier = Modifier.fillMaxSize()
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        Color.Black,
+                        Color.Transparent
+                    )
+                )
+            )
+    ) {
+        Column(modifier = modifier) {
+            IconButton(
+                onClick = onBackButtonClicked
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.KeyboardArrowDown,
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+            Text(
+                text = recommendation.name,
+                fontStyle = FontStyle.Italic,
+                color = Color.White,
+                style = MaterialTheme.typography.headlineLarge.copy(
+                    lineBreak = LineBreak.Heading
+                ),
+                modifier = Modifier
+                    .padding(
+                        start = dimensionResource(id = R.dimen.padding_large)
+                    )
             )
         }
-        Text(
-            text = recommendation.name,
-            color = MaterialTheme.colorScheme.onPrimary,
-            fontStyle = FontStyle.Italic,
-            style = MaterialTheme.typography.headlineLarge.copy(
-                lineBreak = LineBreak.Heading
-            ),
-            modifier = Modifier
-                .padding(
-                    start = dimensionResource(id = R.dimen.padding_large)
-                )
-        )
     }
 }
 
@@ -104,22 +126,20 @@ fun ReviewAndDescription(
     recommendation: Recommendation,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier.padding(dimensionResource(id = R.dimen.padding_large))) {
-
-        /**
-         * TODO("Don't forget ot your custom reviews")
-         */
-        /*Icon(
+    Column(
+        modifier = modifier
+            .padding(dimensionResource(id = R.dimen.padding_large))
+    ) {
+        Icon(
             imageVector = Icons.Outlined.Star,
-            tint = MaterialTheme.colorScheme.primaryContainer,
+            tint = MaterialTheme.colorScheme.tertiaryContainer,
             contentDescription = null,
             modifier = Modifier
                 .size(dimensionResource(id = R.dimen.icon_Size))
                 .padding(bottom = dimensionResource(id = R.dimen.padding_medium))
-        )*/
+        )
         Text(
             text = recommendation.description,
-            color = MaterialTheme.colorScheme.onPrimary,
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier
@@ -128,11 +148,13 @@ fun ReviewAndDescription(
     }
 }
 
-@Preview(showSystemUi = true)
+@Preview
 @Composable
 fun RecommendationScreenPreview() {
-    RecommendationScreen(
-        recommendation = DataSourceProvider.allRecommendations[0],
-        onBackButtonClicked = {}
-    )
+    FesTheme {
+        RecommendationScreen(
+            recommendation = DataSourceProvider.allRecommendations[1],
+            onBackButtonClicked = {}
+        )
+    }
 }
