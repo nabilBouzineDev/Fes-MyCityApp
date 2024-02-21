@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.nabilbdev.fes.data.DataSourceProvider
 import com.nabilbdev.fes.data.model.CategoryOptions
 import com.nabilbdev.fes.data.model.Recommendation
+import com.nabilbdev.fes.ui.utils.FesPlacesReview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -36,6 +37,17 @@ class FesViewModel : ViewModel() {
                 currentSelectedRecommendation = recommendation,
                 isShowingFeed = false
             )
+        }
+    }
+
+    fun updateReviewStars(recommendation: Recommendation): Int {
+        return when (recommendation.review) {
+            FesPlacesReview.FIVE -> 5
+            FesPlacesReview.FOUR -> 4
+            FesPlacesReview.THREE -> 3
+            FesPlacesReview.TWO -> 2
+            FesPlacesReview.ONE -> 1
+            else -> 0
         }
     }
 

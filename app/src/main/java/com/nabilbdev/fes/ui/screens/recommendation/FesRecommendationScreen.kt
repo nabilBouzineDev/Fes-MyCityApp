@@ -1,17 +1,14 @@
-package com.nabilbdev.fes.ui.screens
+package com.nabilbdev.fes.ui.screens.recommendation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -19,11 +16,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
@@ -41,37 +37,38 @@ import com.nabilbdev.fes.ui.theme.FesTheme
 fun RecommendationScreen(
     recommendation: Recommendation,
     onBackButtonClicked: () -> Unit,
+    stars: Int,
     modifier: Modifier = Modifier
 ) {
 
     Card(
         shape = RectangleShape,
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.tertiary
-        ),
-        modifier = modifier.fillMaxSize()
+        modifier = modifier
+            .fillMaxSize()
     ) {
-        Box {
+        Box(
+            modifier = Modifier
+                .weight(1f)
+        ) {
             Image(
                 painter = painterResource(id = recommendation.imageResourceId),
                 contentDescription = null,
+                alpha = 0.5f,
                 contentScale = ContentScale.FillBounds,
-                colorFilter = ColorFilter.tint(
-                    color = MaterialTheme.colorScheme.tertiary.copy(0.8f),
-                    blendMode = BlendMode.Darken
-                ),
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(0.5f)
             )
             BackIconButtonAndPlaceName(
                 recommendation = recommendation,
                 onBackButtonClicked = onBackButtonClicked,
-                modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small))
+                modifier = Modifier
+                    .fillMaxWidth()
             )
         }
         ReviewAndDescription(
-            recommendation = recommendation
+            recommendation = recommendation,
+            stars = stars,
+            modifier = Modifier.weight(1f)
         )
     }
 }
@@ -82,9 +79,8 @@ fun BackIconButtonAndPlaceName(
     onBackButtonClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
+    Column(
+        modifier = modifier
             .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(
@@ -94,67 +90,79 @@ fun BackIconButtonAndPlaceName(
                 )
             )
     ) {
-        Column(modifier = modifier) {
-            IconButton(
-                onClick = onBackButtonClicked
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.KeyboardArrowDown,
-                    contentDescription = null,
-                    tint = Color.White,
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
-            Text(
-                text = recommendation.name,
-                fontStyle = FontStyle.Italic,
-                color = Color.White,
-                style = MaterialTheme.typography.headlineLarge.copy(
-                    lineBreak = LineBreak.Heading
-                ),
-                modifier = Modifier
-                    .padding(
-                        start = dimensionResource(id = R.dimen.padding_large)
-                    )
+        IconButton(
+            onClick = onBackButtonClicked
+        ) {
+            Icon(
+                imageVector = Icons.Filled.KeyboardArrowDown,
+                contentDescription = null,
+                tint = Color.White,
+                modifier = Modifier.fillMaxSize()
             )
         }
+        Text(
+            text = recommendation.name,
+            fontStyle = FontStyle.Italic,
+            color = Color.White,
+            style = MaterialTheme.typography.headlineLarge.copy(
+                lineBreak = LineBreak.Heading
+            ),
+            modifier = Modifier
+                .padding(
+                    start = dimensionResource(id = R.dimen.padding_large)
+                )
+        )
     }
 }
 
 @Composable
 fun ReviewAndDescription(
     recommendation: Recommendation,
+    stars: Int,
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
             .padding(dimensionResource(id = R.dimen.padding_large))
     ) {
-        Icon(
-            imageVector = Icons.Outlined.Star,
-            tint = MaterialTheme.colorScheme.tertiaryContainer,
-            contentDescription = null,
+        Card(
+            shape = MaterialTheme.shapes.small,
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.tertiary
+            ),
             modifier = Modifier
-                .size(dimensionResource(id = R.dimen.icon_Size))
-                .padding(bottom = dimensionResource(id = R.dimen.padding_medium))
-        )
+                .padding(
+                    bottom = dimensionResource(id = R.dimen.padding_medium)
+                )
+                .fillMaxWidth()
+                .align(Alignment.Start)
+        ) {
+            FesRatingBar(
+                stars = stars,
+                modifier = Modifier
+                    .padding(dimensionResource(id = R.dimen.padding_small))
+            )
+        }
         Text(
             text = recommendation.description,
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.bodySmall,
             modifier = Modifier
-                .padding(start = dimensionResource(id = R.dimen.padding_medium))
+                .padding(
+                    start = dimensionResource(id = R.dimen.padding_large)
+                )
         )
     }
 }
 
-@Preview
+@Preview(apiLevel = 33)
 @Composable
 fun RecommendationScreenPreview() {
     FesTheme {
         RecommendationScreen(
             recommendation = DataSourceProvider.allRecommendations[1],
-            onBackButtonClicked = {}
+            onBackButtonClicked = {},
+            stars = 0
         )
     }
 }

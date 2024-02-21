@@ -6,6 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nabilbdev.fes.data.model.Recommendation
+import com.nabilbdev.fes.ui.screens.recommendation.RecommendationScreen
 import com.nabilbdev.fes.ui.viewmodel.FesViewModel
 
 @Composable
@@ -15,6 +16,7 @@ fun FesApp(
 
     val viewModel: FesViewModel = viewModel()
     val fesUiState = viewModel.uiState.collectAsState().value
+    val currentRecommendation = fesUiState.currentSelectedRecommendation
 
     if (fesUiState.isShowingFeed) {
         FeedScreen(
@@ -26,16 +28,11 @@ fun FesApp(
         )
     } else {
         RecommendationScreen(
-            recommendation = fesUiState.currentSelectedRecommendation,
-            onBackButtonClicked = {}
+            recommendation = currentRecommendation,
+            onBackButtonClicked = {},
+            stars = viewModel.updateReviewStars(recommendation = currentRecommendation)
         )
     }
-    /**
-     *
-     * TODO( """ Update the review as the selected recommendation updates
-        based on the category options."""
-        )
-     */
 }
 
 @Preview(showSystemUi = true)

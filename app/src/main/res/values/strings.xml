@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Fes</string>
+    <string name="review_by_google">Google\'s rating</string>
 </resources>
