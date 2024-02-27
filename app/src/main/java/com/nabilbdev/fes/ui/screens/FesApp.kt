@@ -7,6 +7,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nabilbdev.fes.data.model.Recommendation
 import com.nabilbdev.fes.ui.screens.recommendation.RecommendationScreen
+import com.nabilbdev.fes.ui.theme.FesTheme
 import com.nabilbdev.fes.ui.viewmodel.FesViewModel
 
 @Composable
@@ -21,6 +22,9 @@ fun FesApp(
     if (fesUiState.isShowingFeed) {
         FeedScreen(
             fesUiState = fesUiState,
+            categoryUpdater = {
+                viewModel.updateRecommendationListWithCategoryOption(it)
+            },
             onRecommendationCardPressed = { recommendation: Recommendation ->
                 viewModel.updateSelectedRecommendation(recommendation)
             },
@@ -29,14 +33,19 @@ fun FesApp(
     } else {
         RecommendationScreen(
             recommendation = currentRecommendation,
-            onBackButtonClicked = {},
+            onBackButtonClicked = {
+
+            },
             stars = viewModel.updateReviewStars(recommendation = currentRecommendation)
         )
     }
 }
 
-@Preview(showSystemUi = true)
+@Preview(apiLevel = 33, showSystemUi = true, showBackground = true)
 @Composable
 fun FesAppPreview() {
-    FesApp()
+    FesTheme {
+        FesApp()
+    }
+
 }

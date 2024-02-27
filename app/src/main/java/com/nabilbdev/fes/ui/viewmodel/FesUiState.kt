@@ -6,7 +6,7 @@ import com.nabilbdev.fes.data.model.Recommendation
 
 data class FesUiState(
     val recommendationLists: Map<CategoryOptions, List<Recommendation>> = emptyMap(),
-    val currentSelectedCategory: CategoryOptions = CategoryOptions.LANDMARK,
+    val currentSelectedCategory: CategoryOptions = CategoryOptions.LANDMARKS,
     val currentSelectedRecommendation: Recommendation = DataSourceProvider.defaultRecommendation,
     val isShowingFeed: Boolean = true
 ) {

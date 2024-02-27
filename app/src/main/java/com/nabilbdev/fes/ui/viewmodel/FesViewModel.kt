@@ -26,7 +26,7 @@ class FesViewModel : ViewModel() {
             FesUiState(
                 recommendationLists = recommendationsCategoryBased,
                 currentSelectedRecommendation =
-                recommendationsCategoryBased[CategoryOptions.LANDMARK]?.get(0)
+                recommendationsCategoryBased[CategoryOptions.LANDMARKS]?.get(0)
                     ?: DataSourceProvider.defaultRecommendation
             )
     }
@@ -51,12 +51,12 @@ class FesViewModel : ViewModel() {
         }
     }
 
-    fun updateSelectedCategoryOption(categoryOptions: CategoryOptions) {
+    fun updateRecommendationListWithCategoryOption(categoryOptions: CategoryOptions): CategoryOptions {
         _uiState.update {
             it.copy(
                 currentSelectedCategory = categoryOptions,
-                isShowingFeed = false
             )
         }
+        return _uiState.value.currentSelectedCategory
     }
 }

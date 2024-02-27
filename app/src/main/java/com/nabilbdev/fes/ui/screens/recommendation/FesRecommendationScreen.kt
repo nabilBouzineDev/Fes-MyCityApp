@@ -7,6 +7,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Card
@@ -45,30 +48,40 @@ fun RecommendationScreen(
         shape = RectangleShape,
         modifier = modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
     ) {
-        Box(
-            modifier = Modifier
-                .weight(1f)
-        ) {
-            Image(
-                painter = painterResource(id = recommendation.imageResourceId),
-                contentDescription = null,
-                alpha = 0.5f,
-                contentScale = ContentScale.FillBounds,
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
-            BackIconButtonAndPlaceName(
-                recommendation = recommendation,
-                onBackButtonClicked = onBackButtonClicked,
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
-        }
+        ImageAndHeader(
+            recommendation = recommendation,
+            onBackButtonClicked = onBackButtonClicked
+        )
         ReviewAndDescription(
             recommendation = recommendation,
             stars = stars,
-            modifier = Modifier.weight(1f)
+        )
+    }
+}
+
+@Composable
+fun ImageAndHeader(
+    recommendation: Recommendation,
+    onBackButtonClicked: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Box {
+        Image(
+            painter = painterResource(id = recommendation.imageResourceId),
+            contentDescription = null,
+            alpha = 0.5f,
+            modifier = modifier
+                .fillMaxWidth()
+                .size(dimensionResource(id = R.dimen.recommendation_image_size)),
+            contentScale = ContentScale.Crop
+        )
+        BackIconButtonAndPlaceName(
+            recommendation = recommendation,
+            onBackButtonClicked = onBackButtonClicked,
+            modifier = Modifier
+                .fillMaxWidth()
         )
     }
 }
@@ -155,14 +168,14 @@ fun ReviewAndDescription(
     }
 }
 
-@Preview(apiLevel = 33)
+@Preview(apiLevel = 33, showSystemUi = true)
 @Composable
 fun RecommendationScreenPreview() {
     FesTheme {
         RecommendationScreen(
-            recommendation = DataSourceProvider.allRecommendations[1],
+            recommendation = DataSourceProvider.allRecommendations[7],
             onBackButtonClicked = {},
-            stars = 0
+            stars = 2
         )
     }
 }

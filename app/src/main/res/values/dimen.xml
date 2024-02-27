@@ -3,5 +3,8 @@
     <dimen name="padding_small">8dp</dimen>
     <dimen name="padding_medium">16dp</dimen>
     <dimen name="padding_large">32dp</dimen>
-    <dimen name="icon_Size">50dp</dimen>
+    <dimen name="icon_size">50dp</dimen>
+    <dimen name="image_width">130dp</dimen>
+    <dimen name="image_height">256dp</dimen>
+    <dimen name="recommendation_image_size">400dp</dimen>
 </resources>
