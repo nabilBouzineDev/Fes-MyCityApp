@@ -38,9 +38,7 @@ val Typography = Typography(
     bodySmall = TextStyle(
         fontFamily = poppins,
         fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
+        fontSize = 15.sp,
     )
     /* Other default text styles to override
     titleLarge = TextStyle(

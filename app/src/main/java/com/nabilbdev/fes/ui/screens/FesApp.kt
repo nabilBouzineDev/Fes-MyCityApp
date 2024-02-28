@@ -1,42 +1,48 @@
 package com.nabilbdev.fes.ui.screens
 
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nabilbdev.fes.data.model.Recommendation
+import com.nabilbdev.fes.ui.screens.feed.FeedScreen
+import com.nabilbdev.fes.ui.screens.feed.FesFeedTopAppBar
 import com.nabilbdev.fes.ui.screens.recommendation.RecommendationScreen
 import com.nabilbdev.fes.ui.theme.FesTheme
 import com.nabilbdev.fes.ui.viewmodel.FesViewModel
 
 @Composable
-fun FesApp(
-    modifier: Modifier = Modifier
-) {
+fun FesApp() {
 
     val viewModel: FesViewModel = viewModel()
-    val fesUiState = viewModel.uiState.collectAsState().value
+    val fesUiState by viewModel.uiState.collectAsState()
     val currentRecommendation = fesUiState.currentSelectedRecommendation
 
-    if (fesUiState.isShowingFeed) {
+    Scaffold(
+        topBar = {
+            FesFeedTopAppBar()
+        }
+    ) { innerPadding ->
+
         FeedScreen(
             fesUiState = fesUiState,
-            categoryUpdater = {
-                viewModel.updateRecommendationListWithCategoryOption(it)
+            categoryUpdater = { categoryOption ->
+                viewModel.updateRecommendationListWithCategoryOption(categoryOption)
             },
             onRecommendationCardPressed = { recommendation: Recommendation ->
                 viewModel.updateSelectedRecommendation(recommendation)
             },
-            modifier = modifier
+            contentPadding = innerPadding
         )
-    } else {
+    }
+
+    if (!fesUiState.isShowingFeed) {
         RecommendationScreen(
             recommendation = currentRecommendation,
-            onBackButtonClicked = {
-
-            },
-            stars = viewModel.updateReviewStars(recommendation = currentRecommendation)
+            onBackButtonClicked = {},
+            stars = viewModel.updateReviewStars(recommendation = currentRecommendation),
         )
     }
 }
