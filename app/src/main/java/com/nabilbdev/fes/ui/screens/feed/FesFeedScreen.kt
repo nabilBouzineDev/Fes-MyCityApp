@@ -17,7 +17,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -29,57 +28,39 @@ import androidx.compose.ui.text.style.LineBreak
 import com.nabilbdev.fes.R
 import com.nabilbdev.fes.data.model.CategoryOptions
 import com.nabilbdev.fes.data.model.Recommendation
-import com.nabilbdev.fes.ui.viewmodel.FesUiState
+import com.nabilbdev.fes.ui.screens.bars.fesTopBanner
 
 @Composable
 fun FeedScreen(
-    fesUiState: FesUiState,
-    categoryUpdater: (CategoryOptions) -> CategoryOptions,
+    categoryUpdater: (CategoryOptions) -> List<Recommendation>,
+    categoryListSize: Int,
     onRecommendationCardPressed: (Recommendation) -> Unit,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier
 ) {
 
-    val categoriesLists = remember {
-        listOf(
-            CategoryOptions.LANDMARKS,
-            CategoryOptions.HOTELS,
-            CategoryOptions.RESTAURANTS
-        )
-    }
+    LazyColumn(
+        modifier = modifier.padding(contentPadding)
+    ){
 
+        fesTopBanner()
 
-    LazyColumn(contentPadding = contentPadding){
-
-        item {
-            FesTopBanner(
-                contentPadding = PaddingValues(
-                    start = dimensionResource(id = R.dimen.padding_small),
-                    top = dimensionResource(id = R.dimen.padding_medium),
-                    end = dimensionResource(id = R.dimen.padding_small),
-                    bottom = dimensionResource(id = R.dimen.padding_medium)
-                )
-            )
-        }
-
-        categoriesLists.forEach {
-            item {
+        items(
+            CategoryOptions.entries,
+            key = { it.name },
+            itemContent = {
                 CategoryTitle(
                     categoryOption = it,
-                    numberOfPlaces =
-                        fesUiState.recommendationLists[categoryUpdater.invoke(it)]!!.size,
+                    numberOfPlaces = categoryListSize,
                     modifier = modifier
                         .padding(top = dimensionResource(id = R.dimen.padding_medium))
                 )
-            }
-            item {
                 RecommendationHorizontalList(
-                    recommendationList =
-                    fesUiState.recommendationLists[categoryUpdater.invoke(it)]!!,
+                    recommendationList = categoryUpdater(it),
                     onRecommendationCardPressed = onRecommendationCardPressed
                 )
             }
-        }
+        )
     }
 }
 
@@ -89,9 +70,11 @@ fun RecommendationHorizontalList(
     onRecommendationCardPressed: (Recommendation) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Row {
-        LazyRow(horizontalArrangement = Arrangement.SpaceAround) {
-            items(recommendationList) {
+    LazyRow(horizontalArrangement = Arrangement.SpaceAround) {
+        items(
+            items = recommendationList,
+            key = { it.id },
+            itemContent = {
                 RecommendationCard(
                     recommendation = it,
                     onCardClick = { onRecommendationCardPressed(it) },
@@ -99,7 +82,7 @@ fun RecommendationHorizontalList(
                         .padding(dimensionResource(id = R.dimen.padding_small))
                 )
             }
-        }
+        )
     }
 }
 

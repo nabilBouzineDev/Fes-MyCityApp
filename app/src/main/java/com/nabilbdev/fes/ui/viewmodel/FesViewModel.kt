@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.nabilbdev.fes.data.DataSourceProvider
 import com.nabilbdev.fes.data.model.CategoryOptions
 import com.nabilbdev.fes.data.model.Recommendation
+import com.nabilbdev.fes.ui.navigation.FesAppScreens
 import com.nabilbdev.fes.ui.utils.FesPlacesReview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -31,11 +32,37 @@ class FesViewModel : ViewModel() {
             )
     }
 
-    fun updateSelectedRecommendation(recommendation: Recommendation) {
+    /*TODO(Optimization: Try to return void if they're equal)*/
+    fun pickBottomNavItemAndUpdateGridListScreens(index: Int, categoryOptions: String) {
+        _uiState.update {
+            it.copy(
+                selectedBottomNavItem = index,
+            )
+        }
+        if (categoryOptions != FesAppScreens.Feed.title.uppercase()) {
+            _uiState.update {
+                it.copy(
+                    currentSelectedCategory = CategoryOptions.valueOf(categoryOptions)
+                )
+            }
+        }
+    }
+
+    fun isSelectingBottomNavItem(index: Int) = _uiState.value.selectedBottomNavItem == index
+
+    fun updateAndSelectDetailScreen(recommendation: Recommendation) {
         _uiState.update {
             it.copy(
                 currentSelectedRecommendation = recommendation,
                 isShowingFeed = false
+            )
+        }
+    }
+
+    fun hideDetailScreen() {
+        _uiState.update {
+            it.copy(
+                isShowingFeed = true
             )
         }
     }
@@ -51,12 +78,16 @@ class FesViewModel : ViewModel() {
         }
     }
 
-    fun updateRecommendationListWithCategoryOption(categoryOptions: CategoryOptions): CategoryOptions {
+    /*TODO(Optimization: Don't update if category is Landmark)*/
+    fun updateRecommendationListWithCategoryOption(categoryOptions: CategoryOptions): List<Recommendation> {
         _uiState.update {
             it.copy(
                 currentSelectedCategory = categoryOptions,
             )
         }
-        return _uiState.value.currentSelectedCategory
+        return _uiState.value.currentRecommendationList
     }
+
+    fun getSizeOfCategoryRecommendationList() =
+        _uiState.value.currentRecommendationList.size
 }
