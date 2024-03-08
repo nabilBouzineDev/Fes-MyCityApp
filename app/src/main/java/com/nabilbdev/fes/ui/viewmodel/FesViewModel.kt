@@ -32,19 +32,20 @@ class FesViewModel : ViewModel() {
             )
     }
 
-    /*TODO(Optimization: Try to return void if they're equal)*/
     fun pickBottomNavItemAndUpdateGridListScreens(index: Int, categoryOptions: String) {
         _uiState.update {
             it.copy(
                 selectedBottomNavItem = index,
             )
         }
-        if (categoryOptions != FesAppScreens.Feed.title.uppercase()) {
-            _uiState.update {
-                it.copy(
-                    currentSelectedCategory = CategoryOptions.valueOf(categoryOptions)
-                )
-            }
+
+        if (categoryOptions == FesAppScreens.Feed.title.uppercase())
+            return
+
+        _uiState.update {
+            it.copy(
+                currentSelectedCategory = CategoryOptions.valueOf(categoryOptions)
+            )
         }
     }
 
@@ -77,17 +78,4 @@ class FesViewModel : ViewModel() {
             else -> 0
         }
     }
-
-    /*TODO(Optimization: Don't update if category is Landmark)*/
-    fun updateRecommendationListWithCategoryOption(categoryOptions: CategoryOptions): List<Recommendation> {
-        _uiState.update {
-            it.copy(
-                currentSelectedCategory = categoryOptions,
-            )
-        }
-        return _uiState.value.currentRecommendationList
-    }
-
-    fun getSizeOfCategoryRecommendationList() =
-        _uiState.value.currentRecommendationList.size
 }

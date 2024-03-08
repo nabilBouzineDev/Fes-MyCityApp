@@ -2,17 +2,18 @@ package com.nabilbdev.fes.ui.screens.feed
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -28,40 +29,52 @@ import androidx.compose.ui.text.style.LineBreak
 import com.nabilbdev.fes.R
 import com.nabilbdev.fes.data.model.CategoryOptions
 import com.nabilbdev.fes.data.model.Recommendation
-import com.nabilbdev.fes.ui.screens.bars.fesTopBanner
+import com.nabilbdev.fes.ui.screens.bars.FesTopBanner
 
 @Composable
 fun FeedScreen(
-    categoryUpdater: (CategoryOptions) -> List<Recommendation>,
-    categoryListSize: Int,
+    listByCategory: List<Map.Entry<CategoryOptions, List<Recommendation>>>,
     onRecommendationCardPressed: (Recommendation) -> Unit,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier
 ) {
 
-    LazyColumn(
-        modifier = modifier.padding(contentPadding)
-    ){
+    Column(
+        modifier = modifier
+            .padding(contentPadding)
+            .verticalScroll(rememberScrollState())
+    ) {
 
-        fesTopBanner()
-
-        items(
-            CategoryOptions.entries,
-            key = { it.name },
-            itemContent = {
-                CategoryTitle(
-                    categoryOption = it,
-                    numberOfPlaces = categoryListSize,
-                    modifier = modifier
-                        .padding(top = dimensionResource(id = R.dimen.padding_medium))
-                )
-                RecommendationHorizontalList(
-                    recommendationList = categoryUpdater(it),
-                    onRecommendationCardPressed = onRecommendationCardPressed
-                )
-            }
-        )
+        FesTopBanner()
+        listByCategory.forEach {
+            RecommendationsVerticalColumn(
+                categoryOption = it.key,
+                categoryListSize = it.value.size,
+                recommendationList = it.value,
+                onRecommendationCardPressed = onRecommendationCardPressed
+            )
+        }
     }
+}
+
+@Composable
+fun RecommendationsVerticalColumn(
+    categoryOption: CategoryOptions,
+    categoryListSize: Int,
+    recommendationList: List<Recommendation>,
+    onRecommendationCardPressed: (Recommendation) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    CategoryTitle(
+        categoryOption = categoryOption,
+        numberOfPlaces = categoryListSize,
+        modifier = modifier
+            .padding(top = dimensionResource(id = R.dimen.padding_medium))
+    )
+    RecommendationHorizontalList(
+        recommendationList = recommendationList,
+        onRecommendationCardPressed = onRecommendationCardPressed
+    )
 }
 
 @Composable
@@ -70,19 +83,20 @@ fun RecommendationHorizontalList(
     onRecommendationCardPressed: (Recommendation) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    LazyRow(horizontalArrangement = Arrangement.SpaceAround) {
-        items(
-            items = recommendationList,
-            key = { it.id },
-            itemContent = {
-                RecommendationCard(
-                    recommendation = it,
-                    onCardClick = { onRecommendationCardPressed(it) },
-                    modifier = modifier
-                        .padding(dimensionResource(id = R.dimen.padding_small))
-                )
-            }
-        )
+    Row(
+        horizontalArrangement = Arrangement.SpaceAround,
+        modifier = modifier
+            .horizontalScroll(rememberScrollState())
+    ) {
+        recommendationList.forEach {
+            RecommendationCard(
+                recommendation = it,
+                onCardClick = { onRecommendationCardPressed(it) },
+                modifier = Modifier
+                    .padding(dimensionResource(id = R.dimen.padding_small))
+            )
+
+        }
     }
 }
 

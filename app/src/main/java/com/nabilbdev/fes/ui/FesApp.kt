@@ -124,10 +124,7 @@ fun FesApp() {
         ) {
             composable(route = FesAppScreens.Feed.title) {
                 FeedScreen(
-                    categoryListSize = viewModel.getSizeOfCategoryRecommendationList(),
-                    categoryUpdater = { categoryOption ->
-                        viewModel.updateRecommendationListWithCategoryOption(categoryOption)
-                    },
+                    listByCategory = fesUiState.recommendationLists.entries.toList(),
                     onRecommendationCardPressed = { recommendation: Recommendation ->
                         viewModel.updateAndSelectDetailScreen(recommendation)
                     },
