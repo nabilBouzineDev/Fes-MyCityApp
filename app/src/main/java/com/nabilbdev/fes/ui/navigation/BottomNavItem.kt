@@ -1,34 +1,34 @@
 package com.nabilbdev.fes.ui.navigation
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Face
-import androidx.compose.material.icons.rounded.Home
-import androidx.compose.material.icons.rounded.Menu
-import androidx.compose.material.icons.rounded.Place
 import androidx.compose.runtime.Stable
-import androidx.compose.ui.graphics.vector.ImageVector
+import com.nabilbdev.fes.R
 
 @Stable
 data class BottomNavItem(
     val route: String,
-    val icon: ImageVector
+    val label: String,
+    val icon: Int
 )
 
 val navItemList = listOf(
     BottomNavItem(
         route = FesAppScreens.Feed.title,
-        icon = Icons.Rounded.Menu
+        label = "Home",
+        icon = R.drawable.feed
     ),
     BottomNavItem(
         route = FesAppScreens.Landmark.title,
-        icon = Icons.Rounded.Place,
+        label = "Land",
+        icon = R.drawable.emoji_flags,
     ),
     BottomNavItem(
         route = FesAppScreens.Hotel.title,
-        icon = Icons.Rounded.Home,
+        label = "Hotel",
+        icon = R.drawable.hotel,
     ),
     BottomNavItem(
         route = FesAppScreens.Restaurant.title,
-        icon = Icons.Rounded.Face,
+        label = "Resto",
+        icon = R.drawable.restaurant,
     )
 )
