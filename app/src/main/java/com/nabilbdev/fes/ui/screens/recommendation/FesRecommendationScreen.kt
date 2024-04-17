@@ -31,24 +31,36 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.nabilbdev.fes.R
 import com.nabilbdev.fes.data.DataSourceProvider
 import com.nabilbdev.fes.data.model.Recommendation
 import com.nabilbdev.fes.ui.theme.FesTheme
+import com.nabilbdev.fes.ui.utils.FesNavigationType
 
 @Composable
 fun RecommendationScreen(
     recommendation: Recommendation,
     onBackButtonClicked: () -> Unit,
     stars: Int,
+    navigationType: FesNavigationType,
     modifier: Modifier = Modifier
 ) {
 
     Card(
         shape = RectangleShape,
-        modifier = modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
+        modifier = if (navigationType == FesNavigationType.NAVIGATION_RAIL ||
+            navigationType == FesNavigationType.SPLIT_NAV_RAIL
+        ) {
+            modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(start = 95.dp)
+        } else {
+            modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+        }
     ) {
         ImageAndHeader(
             recommendation = recommendation,
@@ -175,7 +187,8 @@ fun RecommendationScreenPreview() {
         RecommendationScreen(
             recommendation = DataSourceProvider.allRecommendations[7],
             onBackButtonClicked = {},
-            stars = 2
+            stars = 2,
+            navigationType = FesNavigationType.BOTTOM_NAVIGATION
         )
     }
 }

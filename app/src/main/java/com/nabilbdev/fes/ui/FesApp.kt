@@ -4,9 +4,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -20,8 +18,6 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.NavigationRail
-import androidx.compose.material3.PermanentDrawerSheet
-import androidx.compose.material3.PermanentNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
@@ -46,7 +42,6 @@ import com.nabilbdev.fes.ui.navigation.FesAppScreens
 import com.nabilbdev.fes.ui.navigation.navItemList
 import com.nabilbdev.fes.ui.screens.bars.FesTopAppBar
 import com.nabilbdev.fes.ui.screens.bars.NavRail
-import com.nabilbdev.fes.ui.screens.bars.PermanentNavDrawer
 import com.nabilbdev.fes.ui.screens.category.HotelCategoryScreen
 import com.nabilbdev.fes.ui.screens.category.LandmarkCategoryScreen
 import com.nabilbdev.fes.ui.screens.category.RestaurantCategoryScreen
@@ -68,10 +63,11 @@ fun FesApp(
     val fesUiState by viewModel.uiState.collectAsState()
     val currentRecommendation = fesUiState.currentSelectedRecommendation
 
+    // setting navigation type based on screen size.
     val navigationType = when (windowSize) {
         WindowWidthSizeClass.Compact -> FesNavigationType.BOTTOM_NAVIGATION
         WindowWidthSizeClass.Medium -> FesNavigationType.NAVIGATION_RAIL
-        WindowWidthSizeClass.Expanded -> FesNavigationType.PERMANENT_NAV_DRAWER
+        WindowWidthSizeClass.Expanded -> FesNavigationType.SPLIT_NAV_RAIL
         else -> FesNavigationType.BOTTOM_NAVIGATION
     }
 
@@ -150,11 +146,13 @@ fun FesApp(
         NavHost(
             navController = navController,
             startDestination = currentScreen,
-            modifier =
-            if (navigationType == FesNavigationType.NAVIGATION_RAIL)
-                Modifier.padding(start = 95.dp)
-            else
-                Modifier.padding(0.dp)
+            modifier = when (navigationType) {
+                FesNavigationType.NAVIGATION_RAIL, FesNavigationType.SPLIT_NAV_RAIL -> Modifier.padding(
+                    start = 95.dp
+                )
+
+                else -> Modifier.padding(0.dp)
+            },
         ) {
             composable(route = FesAppScreens.Feed.title) {
                 FeedScreen(
@@ -202,7 +200,8 @@ fun FesApp(
             onBackButtonClicked = {
                 viewModel.hideDetailScreen()
             },
-            stars = viewModel.updateReviewStars(recommendation = currentRecommendation)
+            stars = viewModel.updateReviewStars(recommendation = currentRecommendation),
+            navigationType = navigationType
         )
         BackHandler(
             enabled = true,
@@ -212,11 +211,12 @@ fun FesApp(
         )
     }
 
-    when {
-        fesUiState.isShowingFeed && navigationType == FesNavigationType.NAVIGATION_RAIL -> {
+    // Navigation behaviour or the app
+    when (navigationType) {
+
+        FesNavigationType.NAVIGATION_RAIL, FesNavigationType.SPLIT_NAV_RAIL -> {
             NavigationRail(
                 containerColor = Color.White,
-                windowInsets = WindowInsets.navigationBars,
                 modifier = Modifier
                     .wrapContentWidth(align = Alignment.Start)
                     .background(MaterialTheme.colorScheme.inverseOnSurface)
@@ -231,6 +231,7 @@ fun FesApp(
                         NavRail(
                             selected = viewModel.isSelectingBottomNavItem(index),
                             onNavItemClicked = {
+                                viewModel.hideDetailScreen()
                                 viewModel
                                     .pickBottomNavItemAndUpdateGridListScreens(
                                         index = index,
@@ -250,38 +251,10 @@ fun FesApp(
                     }
                 }
             }
-
         }
 
-        fesUiState.isShowingFeed && navigationType == FesNavigationType.PERMANENT_NAV_DRAWER -> {
-            PermanentNavigationDrawer(
-                drawerContent = {
-                    PermanentDrawerSheet {
-                        navItemList.forEachIndexed { index, item ->
-                            PermanentNavDrawer(
-                                selected = viewModel.isSelectingBottomNavItem(index),
-                                onNavItemClicked = {
-                                    viewModel
-                                        .pickBottomNavItemAndUpdateGridListScreens(
-                                            index = index,
-                                            categoryOptions = item.route.uppercase()
-                                        )
-                                    navController.navigate(item.route) {
-                                        popUpTo(navController.graph.findStartDestination().id) {
-                                            saveState = true
-                                        }
-                                        launchSingleTop = true
-                                        restoreState = true
-                                    }
-                                },
-                                icon = painterResource(id = item.icon),
-                                label = item.label
-                            )
-                        }
-                    }
-                },
-                content = {}
-            )
+        else -> {
+            // Code is not reaching here.
         }
     }
 }
