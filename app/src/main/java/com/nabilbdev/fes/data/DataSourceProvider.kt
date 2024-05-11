@@ -19,7 +19,7 @@ object DataSourceProvider {
     val allRecommendations = listOf(
         Recommendation(
             name = "Al-Qarawiyyin University",
-            description = "The University of al-Qarawiyyin is one of the oldest universities in the world. It was founded over a thousand years ago, in 859 AD, by a woman named Fatima al-Fihri. The university has a rich history and is known for its Islamic studies and Arabic language programs.",
+            description = "The University of al-Qarawiyyin is one of the oldest universities in the world. It was founded over a thousand years ago, in 859 AD, by a woman named Fatima al-Fihri. The university has a rich history and is known for its Islamic studies and Arabic language.",
             review = FesPlacesReview.FIVE,
             categoryOptions = CategoryOptions.LANDMARKS,
             imageResourceId = R.drawable.land1

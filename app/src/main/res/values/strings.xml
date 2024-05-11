@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Fes</string>
-    <string name="review_by_google">Google\'s rating</string>
+    <string name="review_by_google">Google\'s rating:</string>
+    <string name="back_button_label">Back</string>
+    <string name="des_title">Description</string>
     <string name="feed_top_title">Fes, Morocco</string>
     <string name="feed_top_description">Fes is known for its ancient history, colorful markets, and stunning architecture. Let\'s explore it!</string>
 </resources>
