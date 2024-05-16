@@ -46,8 +46,7 @@ I built this app in order to learn the following topics:
 ---
 >> _To create a composable detail screen for each navigation bar_
 >
-> ...
-
+> ![animation](https://github.com/nabilBouzineDev/Fes-MyCityApp/assets/139881384/2ae4dac9-15d5-42fd-9507-f85d48cead3e)
 
   ## Screenshots
 
